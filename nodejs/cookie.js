@@ -12,6 +12,8 @@ http.createServer((request, response) => {
       'yummy_cookie=choco',
       'tasty_cookie=strawberry',
       `PermanentCookie=myPCookie; Max-age=${60*60*24*30}`,
+      'SecureCookie=mySecure; Secure',
+      'HttpOnly=myHttpOnly; HttpOnly'
     ]
   });
   response.end('Cookie!!');
