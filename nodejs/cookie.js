@@ -13,7 +13,9 @@ http.createServer((request, response) => {
       'tasty_cookie=strawberry',
       `PermanentCookie=myPCookie; Max-age=${60*60*24*30}`,
       'SecureCookie=mySecure; Secure',
-      'HttpOnly=myHttpOnly; HttpOnly'
+      'HttpOnly=myHttpOnly; HttpOnly',
+      'Path=myPath; path=/cookie',
+      'Domain=myDomain; Domain=o2.org'
     ]
   });
   response.end('Cookie!!');
