@@ -22,7 +22,7 @@ function authIsOwner(request, response) {
 function authStatusUI(request,response) {
   var authStatusUI = '<a href="/login">login</a>';
   if(authIsOwner(request, response)) {
-    authStatusUI = '<a href="/logout">logout</a>';
+    authStatusUI = '<a href="/logout_process">logout</a>';
   }
   return authStatusUI;
 }
@@ -88,6 +88,10 @@ var app = http.createServer(function(request,response){
       response.end(html);
     });
   } else if(pathname === '/create_process'){
+    if(authIsOwner(request, response) === false) {
+      response.end('Login Required!!');
+      return false;
+    }
     var body = '';
     request.on('data', function(data){
         body = body + data;
@@ -180,20 +184,37 @@ var app = http.createServer(function(request,response){
         body = body + data;
     });
     request.on('end', function(){
-        var post = qs.parse(body);
-        if(post.email === 'aaa@aaa.com'&&post.password === '1111') {
-          response.writeHead(302, {
-            'Set-Cookie':[
-              `email=${post.email}`,
-              `password=${post.password}`,
-              `nickname=aaa`
-            ],
-            Location: `/`
-          });
-          response.end();
-        } else {
-          response.end('Who?');
-        }
+      var post = qs.parse(body);
+      if(post.email === 'aaa@aaa.com'&&post.password === '1111') {
+        response.writeHead(302, {
+          'Set-Cookie':[
+            `email=${post.email}`,
+            `password=${post.password}`,
+            `nickname=aaa`
+          ],
+          Location: `/`
+        });
+        response.end();
+      } else {
+        response.end('Who?');
+      }
+    });
+  } else if(pathname ==='/logout_process') {
+    var body = '';
+    request.on('data', function(data){
+        body = body + data;
+    });
+    request.on('end', function(){
+      var post = qs.parse(body);
+      response.writeHead(302, {
+        'Set-Cookie':[
+          `email=; Max-Age=0`,
+          `password=; Max-Age=0`,
+          `nickname=; Max-Age=0`
+        ],
+        Location: `/`
+      });
+      response.end();
     });
   } else {
     response.writeHead(404);
